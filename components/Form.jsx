@@ -62,9 +62,9 @@ const Form = ({ countries }) => {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: { country: "Nigeria" },
     resolver: zodResolver(organizationSchema),
   });
+  
   {
     /**password validations */
   }
@@ -97,9 +97,6 @@ const Form = ({ countries }) => {
     } catch (error) {
       console.log(error.message);
     }
-
-    console.log(data);
-
     reset();
   };
 
@@ -182,8 +179,8 @@ const Form = ({ countries }) => {
               className="input-style"
               placeholder="Select"
             >
-              <option value="" disabled className="text-[14px] text-[#ccc]">
-                Select
+              <option value="Nigeria" disabled className="text-[14px] text-[#ccc]">
+                Nigeria
               </option>
               {countries.map((country, index) => (
                 <option key={index} value={country.name}>

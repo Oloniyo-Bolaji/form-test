@@ -8,6 +8,25 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { data } = body;
+    const existing = await db
+      .select()
+      .from(organizationsTable)
+      .where(
+        or(
+          eq(organizationsTable.email, data.email),
+          eq(organizationsTable.organizationName, data.organization_name)
+        )
+      );
+
+    if (existing.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email or organization name already exists",
+        },
+        { status: 400 }
+      );
+    }
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     await db.insert(organizationsTable).values({
@@ -21,7 +40,10 @@ export async function POST(req) {
       password: hashedPassword,
     });
 
-    return NextResponse.json({ success: true, message: "Organization registered successfully!!" });
+    return NextResponse.json({
+      success: true,
+      message: "Organization registered successfully!!",
+    });
   } catch (err) {
     console.error("Database Error:", err);
     return NextResponse.json(
