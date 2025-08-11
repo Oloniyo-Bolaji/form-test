@@ -179,7 +179,7 @@ const Form = ({ countries }) => {
               className="input-style"
               placeholder="Select"
             >
-              <option value="Nigeria" disabled className="text-[14px] text-[#ccc]">
+              <option value="Nigeria" className="text-[14px] text-[#ccc]">
                 Nigeria
               </option>
               {countries.map((country, index) => (
@@ -279,7 +279,7 @@ const Form = ({ countries }) => {
             {errors.confirm_password?.message}
           </p>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" className="bg-[#888] p-[5px] rounded-[5px] mx-auto text-white text-[13px] font-bold">Submit</button>
       </form>
       {/**control buttons */}
       <div className="flex justify-between">
