@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { organizationsTable } from "@/lib/db/schema";
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import bcrypt from "bcrypt";
 
 export async function POST(req) {
@@ -14,7 +14,8 @@ export async function POST(req) {
       .where(
         or(
           eq(organizationsTable.email, data.email),
-          eq(organizationsTable.organizationName, data.organization_name)
+          eq(organizationsTable.organization_name, data.organization_name),
+          eq(organizationsTable.nin, data.nin)
         )
       );
 
@@ -22,7 +23,7 @@ export async function POST(req) {
       return NextResponse.json(
         {
           success: false,
-          message: "Email or organization name already exists",
+          message: "Email or organization name or Nin already exists",
         },
         { status: 400 }
       );

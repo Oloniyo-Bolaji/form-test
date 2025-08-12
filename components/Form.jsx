@@ -54,6 +54,7 @@ const Form = ({ countries }) => {
   }
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -64,7 +65,7 @@ const Form = ({ countries }) => {
   } = useForm({
     resolver: zodResolver(organizationSchema),
   });
-  
+
   {
     /**password validations */
   }
@@ -79,25 +80,28 @@ const Form = ({ countries }) => {
     /**function to submit data on button click */
   }
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const res = await fetch("/api/organizations/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data,
-        }),
+        body: JSON.stringify({ data }),
       });
 
       const result = await res.json();
-      if (result.success) {
-        alert("Organization created successfully");
+
+      if (res.ok) {
+        setLoading(false);
+        alert(result.message || "Organization created successfully");
+        reset();
       } else {
-        throw new Error(result.error || "Something went wrong");
+        setLoading(false);
+        alert(result.message || "Something went wrong");
       }
     } catch (error) {
-      console.log(error.message);
+      setLoading(false);
+      alert("Network or server error: " + error.message);
     }
-    reset();
   };
 
   return (
@@ -279,7 +283,12 @@ const Form = ({ countries }) => {
             {errors.confirm_password?.message}
           </p>
         </div>
-        <button type="submit" className="bg-[#888] p-[5px] rounded-[5px] mx-auto text-white text-[13px] font-bold">Submit</button>
+        <button
+          type="submit"
+          className="bg-[#888] p-[5px] rounded-[5px] mx-auto text-white text-[13px] font-bold"
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
       </form>
       {/**control buttons */}
       <div className="flex justify-between">
